@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>PhloydAI — AI-ассистент для обучения</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    header {
+      padding: 80px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #020617, #020617);
+    }
+
+    header h1 {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    header p {
+      font-size: 18px;
+      color: #9ca3af;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .chat {
+      max-width: 800px;
+      margin: 60px auto;
+      padding: 20px;
+      background: #020617;
+      border-radius: 16px;
+    }
+
+    .messages {
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .message {
+      margin-bottom: 12px;
+    }
+
+    .user {
+      color: #38bdf8;
+    }
+
+    .bot {
+      color: #a7f3d0;
+    }
+
+    input, button {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    input {
+      width: 70%;
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #1e293b;
+    }
+
+    button {
+      width: 28%;
+      margin-left: 2%;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>PhloydAI</h1>
+  <p>Персональный AI-ассистент для обучения студентов. Объясняет сложные темы простым языком и помогает закрепить знания.</p>
+</header>
+
+<div class="chat">
+  <div class="messages" id="messages"></div>
+
+  <input id="input" placeholder="Задайте вопрос ассистенту..." />
+  <button onclick="send()">Отправить</button>
+</div>
+
+<footer>
+  Учебный проект · PhloydAI · 2025
+</footer>
+
+<script>
+  const messages = document.getElementById("messages");
+  const input = document.getElementById("input");
+
+  function addMessage(text, className) {
+    const div = document.createElement("div");
+    div.className = "message " + className;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function send() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage("Вы: " + text, "user");
+    input.value = "";
+
+    try {
+      const res = await fetch("https://hura999.app.n8n.cloud/webhook/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: "student123",
+          student_level: "bachelor",
+          message: text
+        })
+      });
+
+      const data = await res.json();
+      addMessage("PhloydAI: " + data.answer, "bot");
+
+    } catch (e) {
+      addMessage("Ошибка соединения с сервером", "bot");
+    }
+  }
+</script>
+
+</body>
+</html>
